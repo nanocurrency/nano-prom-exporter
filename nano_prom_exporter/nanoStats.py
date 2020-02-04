@@ -23,19 +23,31 @@ class nano_nodeProcess:
             try:
                 self.nanoProm.rss.labels(a.pid).set(a.memory_info().rss)
             except Exception as e:
-                print(e)
+                if os.getenv("NANO_PROM_DEBUG"):
+                    print(e)
+                else:
+                    pass
             try:
                 self.nanoProm.vms.labels(a.pid).set(a.memory_info().vms)
             except Exception as e:
-                print(e)
+                if os.getenv("NANO_PROM_DEBUG"):
+                    print(e)
+                else:
+                    pass
             try:
                 self.nanoProm.pp.labels(a.pid).set(a.memory_info().paged_pool)
             except Exception as e:
-                print(e)
+                if os.getenv("NANO_PROM_DEBUG"):
+                    print(e)
+                else:
+                    pass
             try:
                 self.nanoProm.cpu.labels(a.pid).set(a.cpu_percent())
             except Exception as e:
-                print(e)
+                if os.getenv("NANO_PROM_DEBUG"):
+                    print(e)
+                else:
+                    pass
 
     def get_threads_cpu_percent(self, p, interval=0.1):
         try:
@@ -45,7 +57,10 @@ class nano_nodeProcess:
                 self.nanoProm.threads.labels(p.pid, t.id).set(
                     total_percent * ((t.system_time + t.user_time)/total_time))
         except Exception as e:
-            print(e)
+            if os.getenv("NANO_PROM_DEBUG"):
+                print(e)
+            else:
+                pass
 
 
 class nanoProm:
@@ -100,12 +115,18 @@ class nanoProm:
             for a in stats.Peers['peers']:
                 self.Peers.labels(a, stats.Peers['peers'][a])
         except Exception as e:
-            print(e)
+            if os.getenv("NANO_PROM_DEBUG"):
+                print(e)
+            else:
+                pass
         try:
             self.ConfirmationHistory.labels(stats.ConfirmationHistory['confirmation_stats']['count']).set(
                 stats.ConfirmationHistory['confirmation_stats']['average'])
         except Exception as e:
-            print(e)
+            if os.getenv("NANO_PROM_DEBUG"):
+                print(e)
+            else:
+                pass
         try:
             for entry in stats.StatsCounters['entries']:
                 self.StatsCounters.labels(
@@ -113,7 +134,10 @@ class nanoProm:
             self.Version.info({'rpc_version': stats.Version['rpc_version'], 'store_version': stats.Version['store_version'], 'protocol_version': stats.Version['protocol_version'], 'node_vendor': stats.Version['node_vendor'],
                                'store_vendor': stats.Version['store_vendor'], 'network': stats.Version['network'], 'network_identifier': stats.Version['network_identifier'], 'build_info': stats.Version['build_info']})
         except Exception as e:
-            print(e)
+            if os.getenv("NANO_PROM_DEBUG"):
+                print(e)
+            else:
+                pass
 
     def pushStats(self, registry):
         push_to_gateway(self.config.pushGateway,

@@ -1,4 +1,5 @@
 import requests
+import os
 
 
 class nanoStats:
@@ -38,7 +39,10 @@ class nanoRPC:
         try:
             connection = requests.post(url=self.uri, json=msg)
         except Exception as e:
-            print(e)
+            if os.getenv("NANO_PROM_DEBUG"):
+                print(e)
+            else:
+                pass
             return None
         return connection
 
@@ -50,6 +54,9 @@ class nanoRPC:
                     response = response.json()
                     self.lastData[a] = response
             except Exception as e:
-                print(e)
+                if os.getenv("NANO_PROM_DEBUG"):
+                    print(e)
+                else:
+                    pass
         stats = nanoStats(self.lastData)
         return stats

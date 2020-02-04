@@ -40,3 +40,8 @@
 | |nano_node_database|size of database(bytes)|
 | |nano_node_memory_vms{pid}|all memory used|
 | |nano_node_memory_paged_pool{pid}| |
+
+
+### DEBUGGING
+
+Setting `NANO_PROM_DEBUG` to `1` will print exceptions, useful for debugging
