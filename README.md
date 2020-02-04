@@ -15,7 +15,7 @@
 |-h, --help| | |show this help message and exit|
 |--rpchost|RPCHOST|"[::1]"|default host string|
 |--rpcport|RPCPORT|"7076"|default rpc port|
-|--datapath|DATAPATH|"~/Nano"|as default|
+|--datapath|DATAPATH|"~/Nano/"|as default|
 |--pushgateway|PUSHGATEWAY|"http://localhost:9091"| prometheus push gateway|
 
 
@@ -36,6 +36,7 @@
 | |nano_stats_counters{type, detail, dir} |stats counter entries by type detail and direction |
 |system|nano_node_memory_rss{pid}|allocated and in ram|
 | |nano_node_cpu_usage{pid}|percentage CPU usage|
+| |nano_node_threads{pid,tid}|percentage of total CPU per thread id |
 | |nano_node_database|size of database(bytes)|
 | |nano_node_memory_vms{pid}|all memory used|
 | |nano_node_memory_paged_pool{pid}| |

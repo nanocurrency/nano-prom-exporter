@@ -1,7 +1,7 @@
 import argparse
 from .config import config
 from .nanoRPC import nanoRPC
-from .nanoStats import nanoProm
+from .nanoStats import nanoProm, nano_nodeProcess
 from prometheus_client import CollectorRegistry, Histogram
 from time import sleep
 
@@ -24,11 +24,13 @@ rpcLatency = Histogram('nano_rpc_response', "response time from rpc calls", [
 
 statsCollection = nanoRPC(cnf)
 promCollection = nanoProm(cnf, registry)
+process_stats = nano_nodeProcess(promCollection)
 
 
 def main():
     while True:
         stats = statsCollection.gatherStats(rpcLatency)
+        process_stats.node_process_stats()
         promCollection.update(stats)
         promCollection.pushStats(registry)
         sleep(10)

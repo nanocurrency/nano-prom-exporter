@@ -5,7 +5,10 @@ from prometheus_client import Info, Gauge, push_to_gateway, ProcessCollector
 
 
 class nano_nodeProcess:
-    def find_procs_by_name(name):
+    def __init__(self, nanoProm):
+        self.nanoProm = nanoProm
+
+    def find_procs_by_name(self, name):
         "Return a list of processes matching 'name'."
         ls = []
         for p in psutil.process_iter(attrs=['name', 'pid']):
@@ -13,14 +16,36 @@ class nano_nodeProcess:
                 ls.append(p)
         return ls
 
-    def node_process_stats(nanoProm):
-        nano_pid = nano_nodeProcess.find_procs_by_name('nano_node')
-        index = 0
+    def node_process_stats(self):
+        nano_pid = self.find_procs_by_name('nano_node')
         for a in nano_pid:
-            nanoProm.rss.labels(a.pid).set(a.memory_info().rss)
-            nanoProm.vms.labels(a.pid).set(a.memory_info().vms)
-            nanoProm.pp.labels(a.pid).set(a.memory_info().paged_pool)
-            nanoProm.cpu.labels(a.pid).set(a.cpu_percent())
+            self.get_threads_cpu_percent(a)
+            try:
+                self.nanoProm.rss.labels(a.pid).set(a.memory_info().rss)
+            except Exception as e:
+                print(e)
+            try:
+                self.nanoProm.vms.labels(a.pid).set(a.memory_info().vms)
+            except Exception as e:
+                print(e)
+            try:
+                self.nanoProm.pp.labels(a.pid).set(a.memory_info().paged_pool)
+            except Exception as e:
+                print(e)
+            try:
+                self.nanoProm.cpu.labels(a.pid).set(a.cpu_percent())
+            except Exception as e:
+                print(e)
+
+    def get_threads_cpu_percent(self, p, interval=0.1):
+        try:
+            total_percent = p.cpu_percent(interval)
+            total_time = sum(p.cpu_times())
+            for t in p.threads():
+                self.nanoProm.threads.labels(p.pid, t.id).set(
+                    total_percent * ((t.system_time + t.user_time)/total_time))
+        except Exception as e:
+            print(e)
 
 
 class nanoProm:
@@ -28,6 +53,8 @@ class nanoProm:
         self.config = config
         self.ActiveDifficulty = Gauge('nano_active_difficulty',
                                       'Active Difficulty Multiplier', registry=registry)
+        self.threads = Gauge('nano_node_threads', 'Thread %', [
+                             'pid', 'tid'], registry=registry)
         self.BlockCount = Gauge(
             'nano_block_count', 'Block Count Statistics', ['type'], registry=registry)
         self.ConfirmationHistory = Gauge(
@@ -61,27 +88,30 @@ class nanoProm:
     def update(self, stats):
         try:
             self.ActiveDifficulty.set(stats.ActiveDifficulty)
-            for a in stats.BlockCount:
-                self.BlockCount.labels(a).set(stats.BlockCount[a])
-            self.ConfirmationHistory.labels(stats.ConfirmationHistory['confirmation_stats']['count']).set(
-                stats.ConfirmationHistory['confirmation_stats']['average'])
-            # for a in stats.ConfirmationHistory['confirmations']:
-            #    self.ConfirmationHistoryDetails.labels(a['hash']).set(a['duration'])
-            for a in stats.Peers['peers']:
-                self.Peers.labels(a, stats.Peers['peers'][a])
-            for entry in stats.StatsCounters['entries']:
-                self.StatsCounters.labels(
-                    entry['type'], entry['detail'], entry['dir']).set(entry['value'])
             self.Uptime.set(stats.Uptime)
             self.Frontiers.set(stats.Frontiers)
-            self.Version.info({'rpc_version': stats.Version['rpc_version'], 'store_version': stats.Version['store_version'], 'protocol_version': stats.Version['protocol_version'], 'node_vendor': stats.Version['node_vendor'],
-                               'store_vendor': stats.Version['store_vendor'], 'network': stats.Version['network'], 'network_identifier': stats.Version['network_identifier'], 'build_info': stats.Version['build_info']})
-            processStats = nano_nodeProcess.node_process_stats(self)
             if os.path.exists(self.config.nodeDataPath+"data.ldb"):
                 self.databaseSize.labels("lmdb").set(
                     os.path.getsize(self.config.nodeDataPath+"data.ldb"))
             self.OnlineStake.set(stats.OnlineStake)
             self.PeersStake.set(stats.PeersStake)
+            for a in stats.BlockCount:
+                self.BlockCount.labels(a).set(stats.BlockCount[a])
+            for a in stats.Peers['peers']:
+                self.Peers.labels(a, stats.Peers['peers'][a])
+        except Exception as e:
+            print(e)
+        try:
+            self.ConfirmationHistory.labels(stats.ConfirmationHistory['confirmation_stats']['count']).set(
+                stats.ConfirmationHistory['confirmation_stats']['average'])
+        except Exception as e:
+            print(e)
+        try:
+            for entry in stats.StatsCounters['entries']:
+                self.StatsCounters.labels(
+                    entry['type'], entry['detail'], entry['dir']).set(entry['value'])
+            self.Version.info({'rpc_version': stats.Version['rpc_version'], 'store_version': stats.Version['store_version'], 'protocol_version': stats.Version['protocol_version'], 'node_vendor': stats.Version['node_vendor'],
+                               'store_vendor': stats.Version['store_vendor'], 'network': stats.Version['network'], 'network_identifier': stats.Version['network_identifier'], 'build_info': stats.Version['build_info']})
         except Exception as e:
             print(e)
 

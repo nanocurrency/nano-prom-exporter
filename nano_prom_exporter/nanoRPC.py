@@ -43,13 +43,13 @@ class nanoRPC:
         return connection
 
     def gatherStats(self, rpcLatency):
-        try:
-            for a in self.Commands:
+        for a in self.Commands:
+            try:
                 with rpcLatency.labels(a).time():
                     response = self.rpcWrapper(self.Commands[a])
                     response = response.json()
                     self.lastData[a] = response
-            stats = nanoStats(self.lastData)
-            return stats
-        except:
-            return None
+            except Exception as e:
+                print(e)
+        stats = nanoStats(self.lastData)
+        return stats
