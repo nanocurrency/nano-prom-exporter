@@ -30,7 +30,8 @@
 | |nano_node_frontier_count|Frontier Count|
 | |nano_node_online_stake_total|Online Stake Total|
 | |nano_node_peers_stake_total|Peered Stake Total|
-|   |nano_peers{endpoint, protocol_version}|connected to {who}, running {what}|
+| |nano_node_peer_count|raw peer count|
+| |nano_peers{endpoint, protocol_version}|connected to {who}, running {what}|
 | |nano_uptime|node uptime(sec)|
 | |nano_version|version string|
 | |nano_stats_counters{type, detail, dir} |stats counter entries by type detail and direction |

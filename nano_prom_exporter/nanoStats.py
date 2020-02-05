@@ -77,6 +77,8 @@ class nanoProm:
         )
         self.Peers = Gauge(
             'nano_peers', 'Peer Statistics', ['endpoint', 'protocol_version'], registry=registry)
+        self.PeersCount = Gauge(
+            'nano_node_peer_count', 'Peer Cout', registry=registry)
         self.StatsCounters = Gauge(
             'nano_stats_counters', 'Stats Counters', ['type', 'detail', 'dir'], registry=registry)
         self.Uptime = Gauge('nano_uptime', 'Uptime Counter in seconds',
@@ -114,6 +116,7 @@ class nanoProm:
                 self.BlockCount.labels(a).set(stats.BlockCount[a])
             for a in stats.Peers['peers']:
                 self.Peers.labels(a, stats.Peers['peers'][a])
+            self.PeersCount.set(len(stats.Peers['peers']))
         except Exception as e:
             if os.getenv("NANO_PROM_DEBUG"):
                 print(e)
