@@ -4,3 +4,4 @@ class config:
         self.rpcPort = args.rpcport
         self.pushGateway = args.pushgateway
         self.nodeDataPath = args.datapath
+        self.hostname = args.hostname

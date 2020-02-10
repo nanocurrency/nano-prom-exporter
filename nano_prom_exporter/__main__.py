@@ -3,6 +3,7 @@ from .config import config
 from .nanoRPC import nanoRPC
 from .nanoStats import nanoProm, nano_nodeProcess
 from prometheus_client import CollectorRegistry, Histogram
+from socket import gethostname
 from time import sleep
 
 parser = argparse.ArgumentParser(
@@ -15,6 +16,8 @@ parser.add_argument("--datapath", help="\"~/Nano\" as default",
                     default="~\\Nano", action="store")
 parser.add_argument("--pushgateway", help="\"http://localhost:9091\" prometheus push gateway",
                     default="http://localhost:9091", action="store")
+parser.add_argument("--hostname", help="job name to pass to prometheus",
+                    default=gethostname(), action="store")
 
 args = parser.parse_args()
 cnf = config(args)

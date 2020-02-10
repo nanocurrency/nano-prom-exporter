@@ -1,6 +1,5 @@
 import psutil
 import os
-from socket import gethostname
 from prometheus_client import Info, Gauge, push_to_gateway, ProcessCollector
 
 
@@ -144,4 +143,4 @@ class nanoProm:
 
     def pushStats(self, registry):
         push_to_gateway(self.config.pushGateway,
-                        job=gethostname(), registry=registry)
+                        job=self.config.hostname, registry=registry)

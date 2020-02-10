@@ -1,7 +1,7 @@
 # nano-prom
 
 ### Usage: 
-`nano-prom [-h] [--rpchost RPCHOST] [--rpcport RPCPORT] [--datapath DATAPATH] [--pushgateway PUSHGATEWAY]`
+`nano-prom [-h] [--rpchost RPCHOST] [--rpcport RPCPORT] [--datapath DATAPATH] [--pushgateway PUSHGATEWAY] [--hostname JOBNAME]`
 
 ### Requirements:
 * python 3.7+ https://www.python.org/downloads/
@@ -17,6 +17,7 @@
 |--rpcport|RPCPORT|"7076"|default rpc port|
 |--datapath|DATAPATH|"~/Nano/"|as default|
 |--pushgateway|PUSHGATEWAY|"http://localhost:9091"| prometheus push gateway|
+|--hostname|JOBNAME|socket.gethostname()| jobname to pass to gateway
 
 
 ### Stats exposed:
