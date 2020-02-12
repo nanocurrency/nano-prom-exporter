@@ -80,6 +80,12 @@ class nanoProm:
             'nano_node_peer_count', 'Peer Cout', registry=registry)
         self.StatsCounters = Gauge(
             'nano_stats_counters', 'Stats Counters', ['type', 'detail', 'dir'], registry=registry)
+        self.StatsObjectsCount = Gauge(
+            'nano_stats_objects_count', 'Objects from nano_stats by count', ['l1', 'l2', 'l3'], registry=registry
+        )
+        self.StatsObjectsSize = Gauge(
+            'nano_stats_objects_size', 'Objects from nano_stats by size', ['l1', 'l2', 'l3'], registry=registry
+        )
         self.Uptime = Gauge('nano_uptime', 'Uptime Counter in seconds',
                             registry=registry)
         self.Version = Info(
@@ -135,6 +141,28 @@ class nanoProm:
                     entry['type'], entry['detail'], entry['dir']).set(entry['value'])
             self.Version.info({'rpc_version': stats.Version['rpc_version'], 'store_version': stats.Version['store_version'], 'protocol_version': stats.Version['protocol_version'], 'node_vendor': stats.Version['node_vendor'],
                                'store_vendor': stats.Version['store_vendor'], 'network': stats.Version['network'], 'network_identifier': stats.Version['network_identifier'], 'build_info': stats.Version['build_info']})
+        except Exception as e:
+            if os.getenv("NANO_PROM_DEBUG"):
+                print(e)
+            else:
+                pass
+        try:
+            for l1 in stats.StatsObjects:
+                for l2 in stats.StatsObjects[l1]:
+                    if 'size' in stats.StatsObjects[l1][l2]:
+                        self.StatsObjectsSize.labels(l1,l2,"none").set(stats.StatsObjects[l1][l2]['size'])
+                        self.StatsObjectsCount.labels(l1,l2,"none").set(stats.StatsObjects[l1][l2]['count'])
+                        if os.getenv("NANO_PROM_DEBUG"):
+                            print("l2",l1,l2,stats.StatsObjects[l1][l2]['size'],stats.StatsObjects[l1][l2]['count'])
+                    else:
+                        for l3 in stats.StatsObjects[l1][l2]:
+                            if 'size' in stats.StatsObjects[l1][l2][l3]:
+                                self.StatsObjectsSize.labels(l1,l2,l3).set(stats.StatsObjects[l1][l2][l3]['size'])
+                                self.StatsObjectsCount.labels(l1,l2,l3).set(stats.StatsObjects[l1][l2][l3]['count'])
+                                if os.getenv("NANO_PROM_DEBUG"):
+                                    print("l3",l1,l2,l3,stats.StatsObjects[l1][l2][l3]['size'],stats.StatsObjects[l1][l2][l3]['count'])
+                                
+                    
         except Exception as e:
             if os.getenv("NANO_PROM_DEBUG"):
                 print(e)

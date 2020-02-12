@@ -36,6 +36,8 @@
 | |nano_uptime|node uptime(sec)|
 | |nano_version|version string|
 | |nano_stats_counters{type, detail, dir} |stats counter entries by type detail and direction |
+| |nano_stats_objects_count{l1,l2,l3} |stats object count {l1,l2,l3}|
+| |nano_stats_objects_size{l1,l2,l3} |stats object size {l1,l2,l3}|
 |system|nano_node_memory_rss{pid}|allocated and in ram|
 | |nano_node_cpu_usage{pid}|percentage CPU usage|
 | |nano_node_threads{pid,tid}|percentage of total CPU per thread id |
