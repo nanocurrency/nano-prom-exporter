@@ -42,6 +42,9 @@
 | |nano_node_cpu_usage{pid}|percentage CPU usage|
 | |nano_node_threads{pid,tid}|percentage of total CPU per thread id |
 | |nano_node_database|size of database(bytes)|
+| |nano_node_volume_free|size of volume hosting `DATAPATH` free|
+| |nano_node_volume_used|size of volume hosting `DATAPATH` used|
+| |nano_node_volume_total|size of volume hosting `DATAPATH` total|
 | |nano_node_memory_vms{pid}|all memory used|
 | |nano_node_memory_paged_pool{pid}| |
 

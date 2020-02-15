@@ -41,7 +41,8 @@ class nano_nodeProcess:
                 else:
                     pass
             try:
-                self.nanoProm.cpu.labels(a.pid).set(a.cpu_percent())
+                self.nanoProm.cpu.labels(a.pid).set(
+                    a.cpu_percent(interval=0.1))
             except Exception as e:
                 if os.getenv("NANO_PROM_DEBUG"):
                     print(e)
@@ -100,6 +101,12 @@ class nanoProm:
                          'pid'], registry=registry)
         self.databaseSize = Gauge(
             'nano_node_database', 'nano_node data', ['type'], registry=registry)
+        self.databaseVolumeFree = Gauge(
+            'nano_node_volume_free', 'data volume stats', registry=registry)
+        self.databaseVolumeUsed = Gauge(
+            'nano_node_volume_used', 'data volume stats', registry=registry)
+        self.databaseVolumeTotal = Gauge(
+            'nano_node_volume_total', 'data volume stats', registry=registry)    
         self.Frontiers = Gauge('nano_node_frontier_count',
                                'local node frontier count', registry=registry)
         self.OnlineStake = Gauge(
@@ -115,6 +122,9 @@ class nanoProm:
             if os.path.exists(self.config.nodeDataPath+"data.ldb"):
                 self.databaseSize.labels("lmdb").set(
                     os.path.getsize(self.config.nodeDataPath+"data.ldb"))
+                self.databaseVolumeFree.set(psutil.disk_usage(self.config.nodeDataPath).free)
+                self.databaseVolumeTotal.set(psutil.disk_usage(self.config.nodeDataPath).total)
+                self.databaseVolumeUsed.set(psutil.disk_usage(self.config.nodeDataPath).used)
             self.OnlineStake.set(stats.OnlineStake)
             self.PeersStake.set(stats.PeersStake)
             for a in stats.BlockCount:
@@ -150,19 +160,24 @@ class nanoProm:
             for l1 in stats.StatsObjects:
                 for l2 in stats.StatsObjects[l1]:
                     if 'size' in stats.StatsObjects[l1][l2]:
-                        self.StatsObjectsSize.labels(l1,l2,"none").set(stats.StatsObjects[l1][l2]['size'])
-                        self.StatsObjectsCount.labels(l1,l2,"none").set(stats.StatsObjects[l1][l2]['count'])
+                        self.StatsObjectsSize.labels(l1, l2, "none").set(
+                            stats.StatsObjects[l1][l2]['size'])
+                        self.StatsObjectsCount.labels(l1, l2, "none").set(
+                            stats.StatsObjects[l1][l2]['count'])
                         if os.getenv("NANO_PROM_DEBUG"):
-                            print("l2",l1,l2,stats.StatsObjects[l1][l2]['size'],stats.StatsObjects[l1][l2]['count'])
+                            print(
+                                "l2", l1, l2, stats.StatsObjects[l1][l2]['size'], stats.StatsObjects[l1][l2]['count'])
                     else:
                         for l3 in stats.StatsObjects[l1][l2]:
                             if 'size' in stats.StatsObjects[l1][l2][l3]:
-                                self.StatsObjectsSize.labels(l1,l2,l3).set(stats.StatsObjects[l1][l2][l3]['size'])
-                                self.StatsObjectsCount.labels(l1,l2,l3).set(stats.StatsObjects[l1][l2][l3]['count'])
+                                self.StatsObjectsSize.labels(l1, l2, l3).set(
+                                    stats.StatsObjects[l1][l2][l3]['size'])
+                                self.StatsObjectsCount.labels(l1, l2, l3).set(
+                                    stats.StatsObjects[l1][l2][l3]['count'])
                                 if os.getenv("NANO_PROM_DEBUG"):
-                                    print("l3",l1,l2,l3,stats.StatsObjects[l1][l2][l3]['size'],stats.StatsObjects[l1][l2][l3]['count'])
-                                
-                    
+                                    print(
+                                        "l3", l1, l2, l3, stats.StatsObjects[l1][l2][l3]['size'], stats.StatsObjects[l1][l2][l3]['count'])
+
         except Exception as e:
             if os.getenv("NANO_PROM_DEBUG"):
                 print(e)
