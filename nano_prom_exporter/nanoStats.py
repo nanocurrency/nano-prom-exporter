@@ -106,7 +106,7 @@ class nanoProm:
         self.databaseVolumeUsed = Gauge(
             'nano_node_volume_used', 'data volume stats', registry=registry)
         self.databaseVolumeTotal = Gauge(
-            'nano_node_volume_total', 'data volume stats', registry=registry)    
+            'nano_node_volume_total', 'data volume stats', registry=registry)
         self.Frontiers = Gauge('nano_node_frontier_count',
                                'local node frontier count', registry=registry)
         self.OnlineStake = Gauge(
@@ -122,9 +122,12 @@ class nanoProm:
             if os.path.exists(self.config.nodeDataPath+"data.ldb"):
                 self.databaseSize.labels("lmdb").set(
                     os.path.getsize(self.config.nodeDataPath+"data.ldb"))
-                self.databaseVolumeFree.set(psutil.disk_usage(self.config.nodeDataPath).free)
-                self.databaseVolumeTotal.set(psutil.disk_usage(self.config.nodeDataPath).total)
-                self.databaseVolumeUsed.set(psutil.disk_usage(self.config.nodeDataPath).used)
+                self.databaseVolumeFree.set(
+                    psutil.disk_usage(self.config.nodeDataPath).free)
+                self.databaseVolumeTotal.set(
+                    psutil.disk_usage(self.config.nodeDataPath).total)
+                self.databaseVolumeUsed.set(
+                    psutil.disk_usage(self.config.nodeDataPath).used)
             self.OnlineStake.set(stats.OnlineStake)
             self.PeersStake.set(stats.PeersStake)
             for a in stats.BlockCount:

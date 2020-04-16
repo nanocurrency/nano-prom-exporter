@@ -1,3 +1,12 @@
+"""Nano Prometheus Export to Gateway
+
+This Script allows the user to export specific nano_node based stats to a prometheus gateway
+limiting the amount of attack surface normally needed for exposing stats like this
+
+This script requires `promethues_client` `psutil` and `requests` be installed with the python
+environment you are running this script in.
+"""
+
 import argparse
 from .config import config
 from .nanoRPC import nanoRPC

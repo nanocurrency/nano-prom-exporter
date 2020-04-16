@@ -4,6 +4,20 @@ import os
 
 class nanoStats:
     def __init__(self, collection):
+        """Collection of stats to pass into rpc
+            ActiveDifficulty 
+            BlockCount 
+            ConfirmationHistory 
+            Peers 
+            StatsCounters 
+            StatsObjects 
+            StatsObjects 
+            Uptime 
+            Version 
+            Frontiers 
+            OnlineStake 
+            PeersStake 
+        """
         self.ActiveDifficulty = collection['active_difficulty']['multiplier']
         self.BlockCount = collection['block_count']
         self.ConfirmationHistory = collection['confirmation_history']

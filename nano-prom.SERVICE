@@ -1,0 +1,11 @@
+# Sample Service with auto restart to handle network interrupts
+
+[Unit]
+Description=Nano Prom Service
+[Service]
+ExecStart=/usr/local/bin/python3.7 -m nano_prom_exporter <command line flags here>
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+RestartSec=5
+[Install]
+WantedBy=default.target
