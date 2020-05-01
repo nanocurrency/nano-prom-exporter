@@ -1,14 +1,13 @@
 # nano-prom
 
-### Usage: 
-`nano-prom [-h] [--rpchost RPCHOST] [--rpcport RPCPORT] [--datapath DATAPATH] [--pushgateway PUSHGATEWAY] [--hostname JOBNAME]`
-
 ### Requirements:
 * python 3.7+ https://www.python.org/downloads/
-* prometheus-client `pip3 install prometheus-client`
-* requests `pip3 install requests`
-* psutil `pip3 install psutil`
-* `pip3 install .` from repo root
+
+### Installation:
+* `pip3 install nano-prom-exporter`  
+
+### Usage: 
+`nano-prom [-h] [--rpchost RPCHOST] [--rpcport RPCPORT] [--datapath DATAPATH] [--pushgateway PUSHGATEWAY] [--hostname JOBNAME]`
 
 ||Optional Arguments| | |
 |---|---|---|---|
@@ -48,6 +47,16 @@
 | |nano_node_memory_vms{pid}|all memory used|
 | |nano_node_memory_paged_pool{pid}| |
 
+### Development Requirements:
+* prometheus-client `pip3 install prometheus-client`
+* requests `pip3 install requests`
+* psutil `pip3 install psutil`
+
+### Development Installation using venv:
+* `python3 -m venv venv`
+* `. /venv/bin/activate`
+* `pip install -r requirements.txt`
+* `pip3 install -e .` from repo root
 
 ### DEBUGGING
 

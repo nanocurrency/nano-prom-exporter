@@ -7,7 +7,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setuptools.setup(name='nano_prom_exporter',
-                 version='0.1.0',
+                 version='0.1.1',
                  description='Export nano_node stats for prometheus',
                  long_description=long_description,
                  long_description_content_type='text/markdown',
@@ -15,7 +15,7 @@ setuptools.setup(name='nano_prom_exporter',
                  author_email='Russel@nano.org',
                  python_requires=">=3.7",
                  packages=setuptools.find_packages(),
-                 url="https://github.com/argakiig/nano_prom_exporter",
+                 url="https://github.com/nanocurrency/nano_prom_exporter",
                  install_requires=[
                      'requests',
                      'prometheus-client',
