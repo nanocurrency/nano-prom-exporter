@@ -190,7 +190,6 @@ class nanoProm:
     def pushStats(self, registry):
         for gateway in self.config.pushGateway.split(';'):
             try:
-                print(gateway)
                 push_to_gateway(gateway,
                                 job=self.config.hostname, registry=registry)
             except Exception as e:
