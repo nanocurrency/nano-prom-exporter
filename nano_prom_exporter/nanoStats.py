@@ -188,5 +188,13 @@ class nanoProm:
                 pass
 
     def pushStats(self, registry):
-        push_to_gateway(self.config.pushGateway,
-                        job=self.config.hostname, registry=registry)
+        for gateway in self.config.pushGateway.split(';'):
+            try:
+                print(gateway)
+                push_to_gateway(gateway,
+                                job=self.config.hostname, registry=registry)
+            except Exception as e:
+                if os.getenv("NANO_PROM_DEBUG"):
+                    print(e)
+                else:
+                    pass

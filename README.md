@@ -15,7 +15,7 @@
 |--rpchost|RPCHOST|"[::1]"|default host string|
 |--rpcport|RPCPORT|"7076"|default rpc port|
 |--datapath|DATAPATH|"~/Nano/"|as default|
-|--pushgateway|PUSHGATEWAY|"http://localhost:9091"| prometheus push gateway|
+|--pushgateway|PUSHGATEWAY|"http://localhost:9091"| prometheus push gateway, push to multiple with `;` separaton|
 |--hostname|JOBNAME|socket.gethostname()| jobname to pass to gateway
 
 
