@@ -7,7 +7,7 @@
 * `pip3 install nano-prom-exporter`  
 
 ### Usage: 
-`nano-prom [-h] [--rpchost RPCHOST] [--rpcport RPCPORT] [--datapath DATAPATH] [--pushgateway PUSHGATEWAY] [--hostname JOBNAME]`
+`nano-prom [-h] [--rpchost RPCHOST] [--rpcport RPCPORT] [--datapath DATAPATH] [--pushgateway PUSHGATEWAY] [--hostname JOBNAME] [--interval sec]`
 
 ||Optional Arguments| | |
 |---|---|---|---|
@@ -17,6 +17,7 @@
 |--datapath|DATAPATH|"~/Nano/"|as default|
 |--pushgateway|PUSHGATEWAY|"http://localhost:9091"| prometheus push gateway, push to multiple with `;` separaton|
 |--hostname|JOBNAME|socket.gethostname()| jobname to pass to gateway
+|--interval|sec|"10"|seconds between pushing|
 
 
 ### Stats exposed:

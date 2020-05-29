@@ -5,3 +5,4 @@ class config:
         self.pushGateway = args.pushgateway
         self.nodeDataPath = args.datapath
         self.hostname = args.hostname
+        self.interval = args.interval

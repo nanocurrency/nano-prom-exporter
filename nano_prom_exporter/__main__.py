@@ -27,6 +27,8 @@ parser.add_argument("--pushgateway", help="\"http://localhost:9091\" prometheus 
                     default="http://localhost:9091", action="store")
 parser.add_argument("--hostname", help="job name to pass to prometheus",
                     default=gethostname(), action="store")
+parser.add_argument("--interval", help="interval to sleep",
+                    default="10", action="store")
 
 args = parser.parse_args()
 cnf = config(args)
@@ -45,7 +47,7 @@ def main():
         process_stats.node_process_stats()
         promCollection.update(stats)
         promCollection.pushStats(registry)
-        sleep(10)
+        sleep(int(cnf.interval))
 
 
 if __name__ == '__main__':
