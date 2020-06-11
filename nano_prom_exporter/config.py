@@ -6,3 +6,5 @@ class config:
         self.nodeDataPath = args.datapath
         self.hostname = args.hostname
         self.interval = args.interval
+        self.username = args.username
+        self.password = args.password

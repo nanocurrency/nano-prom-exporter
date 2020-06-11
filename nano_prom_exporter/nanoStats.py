@@ -1,7 +1,7 @@
 import psutil
 import os
 from prometheus_client import Info, Gauge, push_to_gateway, ProcessCollector
-
+from prometheus_client.exposition  import basic_auth_handler
 
 class nano_nodeProcess:
     def __init__(self, nanoProm):
@@ -187,11 +187,21 @@ class nanoProm:
             else:
                 pass
 
+    def auth_handler(self, url, method, timeout, headers, data):
+        return basic_auth_handler(url, method, timeout, headers, data, self.config.username, self.config.password)
+
     def pushStats(self, registry):
         for gateway in self.config.pushGateway.split(';'):
             try:
-                push_to_gateway(gateway,
-                                job=self.config.hostname, registry=registry)
+                if self.config.username !="":
+                    if self.config.password == "":
+                        print("Username and Password needed for basic auth")
+                        push_to_gateway(gateway,job=self.config.hostname, registry=registry)
+                    else:
+                        push_to_gateway(gateway,
+                                job=self.config.hostname, registry=registry, handler=self.auth_handler)
+                else:
+                    push_to_gateway(gateway,job=self.config.hostname, registry=registry)
             except Exception as e:
                 if os.getenv("NANO_PROM_DEBUG"):
                     print(e)

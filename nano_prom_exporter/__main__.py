@@ -29,6 +29,10 @@ parser.add_argument("--hostname", help="job name to pass to prometheus",
                     default=gethostname(), action="store")
 parser.add_argument("--interval", help="interval to sleep",
                     default="10", action="store")
+parser.add_argument("--username", help="Username for basic auth on pushgateway",
+                    default="", action="store")
+parser.add_argument("--password", help="Password for basic auth on pushgateway",
+                    default="", action="store")
 
 args = parser.parse_args()
 cnf = config(args)
