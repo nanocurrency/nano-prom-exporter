@@ -7,7 +7,7 @@
 * `pip3 install nano-prom-exporter`  
 
 ### Usage: 
-`nano-prom [-h] [--rpchost RPCHOST] [--rpcport RPCPORT] [--datapath DATAPATH] [--pushgateway PUSHGATEWAY] [--hostname JOBNAME] [--interval SEC] [--username USERNAME] [--password PASSWORD]`
+`nano-prom [-h] [--rpchost RPCHOST] [--rpcport RPCPORT] [--datapath DATAPATH] [--pushgateway PUSHGATEWAY] [--hostname JOBNAME] [--interval SEC] [--username USERNAME] [--password PASSWORD] [--config_path PATH/TO/config.ini]`
 
 ||Optional Arguments| | |
 |---|---|---|---|
@@ -15,12 +15,31 @@
 |--rpchost|RPCHOST|"[::1]"|default host string|
 |--rpcport|RPCPORT|"7076"|default rpc port|
 |--datapath|DATAPATH|"~/Nano/"|as default|
-|--pushgateway|PUSHGATEWAY|"http://localhost:9091"| prometheus push gateway, push to multiple with `;` separaton|
+|--pushgateway|PUSHGATEWAY|"http://localhost:9091"| prometheus push gateway, for multiple use config.ini and --config_path|
 |--hostname|JOBNAME|socket.gethostname()| jobname to pass to gateway
 |--interval|SEC|"10"|seconds between pushing|
-|--username|USERNAME|""|http_basic_auth support username|
-|--password|PASSWORD|""|http_basic_auth support password|
+|--username|USERNAME|""|http_basic_auth username, for multiple use config.ini and --config_path|
+|--password|PASSWORD|""|http_basic_auth password, for multiple use config.ini and --config_path|
+|--config_path|PATH/TO/config.ini|""|path to config.ini for multiple push gateway and basic_auth support|
 
+### Sample config.ini
+```ini
+[DEFAULT]
+rpcIP = localhost ; ip for rpc
+rpcPort = 7076 ; port for rpc
+nodeDataPath = ~/Nano/ ; path to Nano Directory
+hostname = testing ; hostname will default to socket.gethostname if not configured
+interval = 10 ; default 10 seconds
+
+;example showing push gateway with no auth
+[http://127.0.0.1:9091] ; push gateway full url and port
+
+;example showing push gateway with basic_auth
+[http://127.0.0.1:9092] ; push gateway full url and port
+username = test ; username for basic auth
+password = testing ; password for basic auth 
+
+```
 
 ### Stats exposed:
 

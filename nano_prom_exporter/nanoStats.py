@@ -186,20 +186,17 @@ class nanoProm:
                 print(e)
             else:
                 pass
-
-    def auth_handler(self, url, method, timeout, headers, data):
-        return basic_auth_handler(url, method, timeout, headers, data, self.config.username, self.config.password)
+    @staticmethod
+    def auth_handler(url, method, timeout, headers, data, creds):
+        return basic_auth_handler(url, method, timeout, headers, data, creds['username'], creds['password'])
 
     def pushStats(self, registry):
-        for gateway in self.config.pushGateway.split(';'):
+        for gateway, creds in self.config.pushGateway.items():
             try:
-                if self.config.username !="":
-                    if self.config.password == "":
-                        print("Username and Password needed for basic auth")
-                        push_to_gateway(gateway,job=self.config.hostname, registry=registry)
-                    else:
-                        push_to_gateway(gateway,
-                                job=self.config.hostname, registry=registry, handler=self.auth_handler)
+                if creds['username'] !="":
+                    handle = lambda url, method, timeout, headers, data: self.auth_handler(url,method, timeout, headers, data, creds)
+                    push_to_gateway(gateway,
+                                job=self.config.hostname, registry=registry, handler=handle)
                 else:
                     push_to_gateway(gateway,job=self.config.hostname, registry=registry)
             except Exception as e:

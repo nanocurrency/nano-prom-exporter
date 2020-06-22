@@ -21,8 +21,8 @@ parser.add_argument("--rpchost", help="\"[::1]\" default\thost string",
                     default="[::1]", action="store")
 parser.add_argument("--rpcport", help="\"7076\" default\trpc port",
                     default="7076", action="store")
-parser.add_argument("--datapath", help="\"~/Nano\" as default",
-                    default="~\\Nano", action="store")
+parser.add_argument("--datapath", help="\"~\\Nano\" as default",
+                    default="~\\Nano\\", action="store")
 parser.add_argument("--pushgateway", help="\"http://localhost:9091\" prometheus push gateway",
                     default="http://localhost:9091", action="store")
 parser.add_argument("--hostname", help="job name to pass to prometheus",
@@ -33,6 +33,8 @@ parser.add_argument("--username", help="Username for basic auth on pushgateway",
                     default="", action="store")
 parser.add_argument("--password", help="Password for basic auth on pushgateway",
                     default="", action="store")
+parser.add_argument("--config_path", help="Path to config.ini \nIgnores other CLI arguments",
+                    default=None, action="store")
 
 args = parser.parse_args()
 cnf = config(args)
