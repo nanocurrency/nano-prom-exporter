@@ -3,7 +3,8 @@
 [Unit]
 Description=Nano Prom Service
 [Service]
-ExecStart=/usr/local/bin/python3.7 -m nano_prom_exporter <command line flags here>
+#https://github.com/nanocurrency/nano_prom_exporter/#sample-configini for sample config.ini
+ExecStart=/usr/local/bin/python3.7 -m nano_prom_exporter --config_path /path/to/config.ini 
 Environment=PYTHONUNBUFFERED=1
 Restart=on-failure
 RestartSec=5
