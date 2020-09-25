@@ -32,6 +32,8 @@ class nanoStats:
         self.Frontiers = collection['frontier_count']['count']
         self.OnlineStake = collection['confirmation_quorum']['online_stake_total']
         self.PeersStake = collection['confirmation_quorum']['peers_stake_total']
+        self.TelemetryRaw = collection['telemetry_raw']['metrics']
+        self.Telemetry = collection['telemetry']
 
 
 class nanoRPC:
@@ -48,12 +50,15 @@ class nanoRPC:
         ActiveDifficulty = {"action": "active_difficulty"}
         Frontiers = {"action": "frontier_count"}
         Quorum = {"action": "confirmation_quorum"}
+        TelemetryRaw = {"action": "telemetry", "raw": "true"}
+        Telemetry = {"action": "telemetry"}
         self.Commands = {"version": Version, "block_count": BlockCount,
                          "peers": Peers, "stats_counters": StatsCounters,
                          "stats_objects": StatsObjects,
                          "confirmation_history": ConfirmationHistory,
                          "uptime": Uptime, "active_difficulty": ActiveDifficulty,
-                         "frontier_count": Frontiers, "confirmation_quorum": Quorum}
+                         "frontier_count": Frontiers, "confirmation_quorum": Quorum,
+                         "telemetry_raw": TelemetryRaw, "telemetry": Telemetry}
 
     def rpcWrapper(self, msg):
         try:

@@ -1,7 +1,34 @@
 import psutil
 import os
 from prometheus_client import Info, Gauge, push_to_gateway, ProcessCollector
-from prometheus_client.exposition  import basic_auth_handler
+from prometheus_client.exposition import basic_auth_handler
+
+
+class telemetry_raw(object):
+    def __init__(self, m):
+        try:
+            self.endpoint = (str(m['address']) + ":" + str(m['port']))
+            self.node_id = m['node_id']
+        except KeyError:
+            self.endpoint = "avg_telemetry"
+            self.node_id = "avg_telemetry"
+        self.block_count = m['block_count']
+        self.cemented_count = m['cemented_count']
+        self.unchecked_count = m['unchecked_count']
+        self.account_count = m['account_count']
+        self.bandwidth_cap = m['bandwidth_cap']
+        self.peer_count = m['peer_count']
+        self.protocol = m['protocol_version']
+        self.major = m['major_version']
+        self.minor = m['minor_version']
+        self.patch = m['patch_version']
+        self.pre_release = m['pre_release_version']
+        self.uptime = m['uptime']
+        self.genesis_block = m['genesis_block']
+        self.maker = m['maker']
+        self.timestamp = m['timestamp']
+        self.active_difficulty = m['active_difficulty']
+
 
 class nano_nodeProcess:
     def __init__(self, nanoProm):
@@ -75,8 +102,6 @@ class nanoProm:
         self.ConfirmationHistory = Gauge(
             'nano_confirmation_history', 'Block Confirmation Average', ['count'], registry=registry
         )
-        self.Peers = Gauge(
-            'nano_peers', 'Peer Statistics', ['endpoint', 'protocol_version'], registry=registry)
         self.PeersCount = Gauge(
             'nano_node_peer_count', 'Peer Cout', registry=registry)
         self.StatsCounters = Gauge(
@@ -113,6 +138,34 @@ class nanoProm:
             'nano_node_online_stake_total', 'Online Stake Total', registry=registry)
         self.PeersStake = Gauge(
             'nano_node_peers_stake_total', 'Peers Stake Total', registry=registry)
+        self.telemetry_raw_blocks = Gauge(
+            'telemetry_raw_blocks', 'Raw Telemetry block count by endpoint', ['endpoint'], registry=registry)
+        self.telemetry_raw_cemented = Gauge(
+            'telemetry_raw_cemented', 'Raw Telemetry cemented count by endpoint', ['endpoint'], registry=registry)
+        self.telemetry_raw_unchecked = Gauge(
+            'telemetry_raw_unchecked', 'Raw Telemetry unchecked count by endpoint', ['endpoint'], registry=registry)
+        self.telemetry_raw_accounts = Gauge(
+            'telemetry_raw_accounts', 'Raw Telemetry accounts count by endpoint', ['endpoint'], registry=registry)
+        self.telemetry_raw_bandwidth = Gauge(
+            'telemetry_raw_bandwidth', 'Raw Telemetry bandwidth cap by endpoint', ['endpoint'], registry=registry)
+        self.telemetry_raw_peers = Gauge('telemetry_raw_peer', 'Raw Telemetry peer count by endpoint', [
+                                         'endpoint'], registry=registry)
+        self.telemetry_raw_protocol = Gauge(
+            'telemetry_raw_protocol', 'Raw Telemetry protocol version by endpoint', ['endpoint'], registry=registry)
+        self.telemetry_raw_major = Gauge('telemetry_raw_major', 'Raw Telemetry major version by endpoint', [
+                                         'endpoint'], registry=registry)
+        self.telemetry_raw_minor = Gauge('telemetry_raw_minor', 'Raw Telemetry minor version by endpoint', [
+                                         'endpoint'], registry=registry)
+        self.telemetry_raw_patch = Gauge('telemetry_raw_patch', 'Raw Telemetry patch version by endpoint', [
+                                         'endpoint'], registry=registry)
+        self.telemetry_raw_pre = Gauge(
+            'telemetry_raw_pre', 'Raw Telemetry pre-release version by endpoint', ['endpoint'], registry=registry)
+        self.telemetry_raw_uptime = Gauge(
+            'telemetry_raw_uptime', 'Raw Telemetry uptime counter by endpoint', ['endpoint'], registry=registry)
+        self.telemetry_raw_maker = Gauge('telemetry_raw_maker', 'Raw Telemetry maker by endpoint', [
+                                         'endpoint'], registry=registry)
+        self.telemetry_raw_timestamp = Gauge(
+            'telemetry_raw_timestamp', 'Raw Telemetry updated timestamp by endpoint', ['endpoint'], registry=registry)
 
     def update(self, stats):
         try:
@@ -132,9 +185,38 @@ class nanoProm:
             self.PeersStake.set(stats.PeersStake)
             for a in stats.BlockCount:
                 self.BlockCount.labels(a).set(stats.BlockCount[a])
-            for a in stats.Peers['peers']:
-                self.Peers.labels(a, stats.Peers['peers'][a])
             self.PeersCount.set(len(stats.Peers['peers']))
+            for a in (stats.TelemetryRaw + [stats.Telemetry]):
+                endpoint = telemetry_raw(a)
+                self.telemetry_raw_blocks.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.block_count)
+                self.telemetry_raw_cemented.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.cemented_count)
+                self.telemetry_raw_unchecked.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.unchecked_count)
+                self.telemetry_raw_accounts.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.account_count)
+                self.telemetry_raw_bandwidth.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.bandwidth_cap)
+                self.telemetry_raw_peers.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.peer_count)
+                self.telemetry_raw_protocol.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.protocol)
+                self.telemetry_raw_major.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.major)
+                self.telemetry_raw_minor.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.minor)
+                self.telemetry_raw_patch.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.patch)
+                self.telemetry_raw_pre.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.pre_release)
+                self.telemetry_raw_uptime.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.uptime)
+                self.telemetry_raw_maker.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.maker)
+                self.telemetry_raw_timestamp.labels(
+                    endpoint=endpoint.endpoint).set(endpoint.timestamp)
+
         except Exception as e:
             if os.getenv("NANO_PROM_DEBUG"):
                 print(e)
@@ -186,6 +268,7 @@ class nanoProm:
                 print(e)
             else:
                 pass
+
     @staticmethod
     def auth_handler(url, method, timeout, headers, data, creds):
         return basic_auth_handler(url, method, timeout, headers, data, creds['username'], creds['password'])
@@ -193,12 +276,14 @@ class nanoProm:
     def pushStats(self, registry):
         for gateway, creds in self.config.pushGateway.items():
             try:
-                if creds['username'] !="":
-                    handle = lambda url, method, timeout, headers, data: self.auth_handler(url,method, timeout, headers, data, creds)
+                if creds['username'] != "":
+                    def handle(url, method, timeout, headers, data): return self.auth_handler(
+                        url, method, timeout, headers, data, creds)
                     push_to_gateway(gateway,
-                                job=self.config.hostname, registry=registry, handler=handle)
+                                    job=self.config.hostname, registry=registry, handler=handle)
                 else:
-                    push_to_gateway(gateway,job=self.config.hostname, registry=registry)
+                    push_to_gateway(
+                        gateway, job=self.config.hostname, registry=registry)
             except Exception as e:
                 if os.getenv("NANO_PROM_DEBUG"):
                     print(e)
