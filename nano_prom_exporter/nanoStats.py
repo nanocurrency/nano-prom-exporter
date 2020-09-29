@@ -95,6 +95,8 @@ class nanoProm:
         self.config = config
         self.ActiveDifficulty = Gauge('nano_active_difficulty',
                                       'Active Difficulty Multiplier', registry=registry)
+        self.NetworkReceiveCurrent = Gauge(
+            'nano_active_difficulty_receive', 'current receive multiplier', registry=registry)
         self.threads = Gauge('nano_node_threads', 'Thread %', [
                              'pid', 'tid'], registry=registry)
         self.BlockCount = Gauge(
@@ -170,6 +172,7 @@ class nanoProm:
     def update(self, stats):
         try:
             self.ActiveDifficulty.set(stats.ActiveDifficulty)
+            self.NetworkReceiveCurrent.set(stats.NetworkReceiveCurrent)
             self.Uptime.set(stats.Uptime)
             self.Frontiers.set(stats.Frontiers)
             if os.path.exists(self.config.nodeDataPath+"data.ldb"):

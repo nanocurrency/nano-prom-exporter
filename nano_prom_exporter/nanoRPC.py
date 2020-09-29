@@ -2,6 +2,9 @@ import requests
 import os
 
 
+def to_multiplier(difficulty: int, base_difficulty) -> float:
+    return float((1 << 64) - base_difficulty) / float((1 << 64) - difficulty)
+
 class nanoStats:
     def __init__(self, collection):
         """Collection of stats to pass into rpc
@@ -19,6 +22,8 @@ class nanoStats:
             PeersStake 
         """
         self.ActiveDifficulty = collection['active_difficulty']['multiplier']
+        self.NetworkReceiveCurrent = to_multiplier(int(collection['active_difficulty']['network_receive_current'], 16), int(
+            collection['active_difficulty']['network_receive_minimum'], 16))
         self.BlockCount = collection['block_count']
         self.ConfirmationHistory = collection['confirmation_history']
         self.Peers = collection['peers']
