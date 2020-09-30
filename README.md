@@ -47,18 +47,33 @@ password = testing ; password for basic auth
 |---|---|---|
 |rpc|nano_rpc_response|histogram of rpc response by action|
 | |nano_active_difficulty|Active Difficulty Multiplier|
+| |nano_active_difficulty_receive|Active Difficulty Receive Multiplier|
 | |nano_block_count{type}|Block Count Statistics|
 | |nano_confirmation_history{count}|Block Confirmation Average{count sample size}|
 | |nano_node_frontier_count|Frontier Count|
 | |nano_node_online_stake_total|Online Stake Total|
 | |nano_node_peers_stake_total|Peered Stake Total|
 | |nano_node_peer_count|raw peer count|
-| |nano_peers{endpoint, protocol_version}|connected to {who}, running {what}|
 | |nano_uptime|node uptime(sec)|
 | |nano_version|version string|
 | |nano_stats_counters{type, detail, dir} |stats counter entries by type detail and direction |
 | |nano_stats_objects_count{l1,l2,l3} |stats object count {l1,l2,l3}|
 | |nano_stats_objects_size{l1,l2,l3} |stats object size {l1,l2,l3}|
+| |telemetry_raw_blocks|raw telemetry block count by endpoint|
+| |telemetry_raw_cemented|raw telemetry cemented count by endpoint|
+| |telemetry_raw_unchecked|raw telemetry unchecked count by endpoint|
+| |telemetry_raw_accounts|raw telemetry account count by endpoint|
+| |telemetry_raw_bandwidth|raw telemetry bandwidth cap by endpoint|
+| |telemetry_raw_peer|raw telemetry peer count by endpoint|
+| |telemetry_raw_protocol|raw telemetry protocol version by endpoint|
+| |telemetry_raw_major|raw telemetry major version by endpoint|
+| |telemetry_raw_minor|raw telemetry minor version by endpoint|
+| |telemetry_raw_patch|raw telemetry patch version by endpoint|
+| |telemetry_raw_pre|raw telemetry pre-release version by endpoint|
+| |telemetry_raw_uptime|raw telemetry uptime by endpoint|
+| |telemetry_raw_maker|raw telemetry maker by endpoint|
+| |telemetry_raw_timestamp|raw telemetry received timestamp by endpoint|
+
 |system|nano_node_memory_rss{pid}|allocated and in ram|
 | |nano_node_cpu_usage{pid}|percentage CPU usage|
 | |nano_node_threads{pid,tid}|percentage of total CPU per thread id |
