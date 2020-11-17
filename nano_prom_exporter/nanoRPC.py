@@ -1,36 +1,44 @@
-import requests
 import os
+
+import requests
 
 
 def to_multiplier(difficulty: int, base_difficulty) -> float:
     return float((1 << 64) - base_difficulty) / float((1 << 64) - difficulty)
 
+
 class nanoStats:
     def __init__(self, collection):
         """Collection of stats to pass into rpc
-            ActiveDifficulty 
-            BlockCount 
-            ConfirmationHistory 
-            Peers 
-            StatsCounters 
-            StatsObjects 
-            StatsObjects 
-            Uptime 
-            Version 
-            Frontiers 
-            OnlineStake 
-            PeersStake 
+            ActiveDifficulty
+            BlockCount
+            ConfirmationHistory
+            Peers
+            StatsCounters
+            StatsObjects
+            StatsObjects
+            Uptime
+            Version
+            Frontiers
+            OnlineStake
+            PeersStake
         """
         self.ActiveDifficulty = collection['active_difficulty']['multiplier']
-        self.NetworkReceiveCurrent = to_multiplier(int(collection['active_difficulty']['network_receive_current'], 16), int(
-            collection['active_difficulty']['network_receive_minimum'], 16))
+        self.NetworkReceiveCurrent = to_multiplier(
+            int(
+                collection['active_difficulty']['network_receive_current'],
+                16),
+            int(
+                collection['active_difficulty']['network_receive_minimum'],
+                16))
         self.BlockCount = collection['block_count']
         self.ConfirmationHistory = collection['confirmation_history']
         self.Peers = collection['peers']
         self.StatsCounters = collection['stats_counters']
         try:
             self.StatsObjects = collection['stats_objects']['node']
-        except:
+        except Exception as e:
+            print(e.__str__())
             self.StatsObjects = None
         self.Uptime = collection['uptime']['seconds']
         self.Version = collection['version']
@@ -43,7 +51,11 @@ class nanoStats:
 
 class nanoRPC:
     def __init__(self, config):
-        self.uri = "http://"+config.rpcIP+":"+config.rpcPort
+        
+        """Helper class for RPC calls
+        accepts config returns stats object
+        """
+        self.uri = "http://" + config.rpc_ip + ":" + config.rpc_port
         self.lastData = {}
         Version = {"action": "version"}
         BlockCount = {"action": "block_count"}
@@ -57,13 +69,19 @@ class nanoRPC:
         Quorum = {"action": "confirmation_quorum"}
         TelemetryRaw = {"action": "telemetry", "raw": "true"}
         Telemetry = {"action": "telemetry"}
-        self.Commands = {"version": Version, "block_count": BlockCount,
-                         "peers": Peers, "stats_counters": StatsCounters,
-                         "stats_objects": StatsObjects,
-                         "confirmation_history": ConfirmationHistory,
-                         "uptime": Uptime, "active_difficulty": ActiveDifficulty,
-                         "frontier_count": Frontiers, "confirmation_quorum": Quorum,
-                         "telemetry_raw": TelemetryRaw, "telemetry": Telemetry}
+        self.Commands = {
+            "version": Version,
+            "block_count": BlockCount,
+            "peers": Peers,
+            "stats_counters": StatsCounters,
+            "stats_objects": StatsObjects,
+            "confirmation_history": ConfirmationHistory,
+            "uptime": Uptime,
+            "active_difficulty": ActiveDifficulty,
+            "frontier_count": Frontiers,
+            "confirmation_quorum": Quorum,
+            "telemetry_raw": TelemetryRaw,
+            "telemetry": Telemetry}
 
     def rpcWrapper(self, msg):
         try:
@@ -71,8 +89,6 @@ class nanoRPC:
         except Exception as e:
             if os.getenv("NANO_PROM_DEBUG"):
                 print(e)
-            else:
-                pass
             return None
         return connection
 
@@ -86,7 +102,5 @@ class nanoRPC:
             except Exception as e:
                 if os.getenv("NANO_PROM_DEBUG"):
                     print(e)
-                else:
-                    pass
         stats = nanoStats(self.lastData)
         return stats

@@ -1,34 +1,34 @@
 import configparser
 
 
-class config:
+class Config(object):
     def __init__(self, args):
-        self.rpcIP = args.rpchost
-        self.rpcPort = args.rpcport
-        self.pushGateway = {args.pushgateway: {
+        self.rpc_ip = args.rpchost
+        self.rpc_port = args.rpc_port
+        self.push_gateway = {args.push_gateway: {
             "username": args.username, "password": args.password}}
-        self.nodeDataPath = args.datapath
+        self.node_data_path = args.datapath
         self.hostname = args.hostname
         self.interval = args.interval
 
         print("loaded config, ", self.__config_file(args.config_path))
 
     def __config_file(self, config_path):
-        if config_path == None:
+        if config_path is None:
             return None
         try:
             config = configparser.ConfigParser()
             config.read(config_path)
-            self.rpcIP = config.get('DEFAULT', 'rpcIP', fallback=self.rpcIP)
-            self.rpcPort = config.get(
-                'DEFAULT', 'rpcPort', fallback=self.rpcPort)
-            self.nodeDataPath = config.get(
-                'DEFAULT', 'nodeDataPath', fallback=self.nodeDataPath)
+            self.rpc_ip = config.get('DEFAULT', 'rpc_ip', fallback=self.rpc_ip)
+            self.rpc_port = config.get(
+                'DEFAULT', 'rpc_port', fallback=self.rpc_port)
+            self.node_data_path = config.get(
+                'DEFAULT', 'node_data_path', fallback=self.node_data_path)
             self.hostname = config.get(
                 'DEFAULT', 'hostname', fallback=self.hostname)
             self.interval = config.get(
                 'DEFAULT', 'interval', fallback=self.interval)
-            self.pushGateway = {}
+            self.push_gateway = {}
             for gateway in config.sections():
                 username = config.get(gateway, 'username', fallback="")
                 password = config.get(gateway, 'password', fallback="")
@@ -36,7 +36,7 @@ class config:
                     if password == "":
                         print("Password Needed if using basic Auth ", gateway)
                         exit(0)
-                self.pushGateway[gateway] = {
+                self.push_gateway[gateway] = {
                     "username": username, "password": password}
             return self
         except Exception as e:
