@@ -55,6 +55,7 @@ password = testing ; password for basic auth
 |        | nano_node_frontier_count               | Frontier Count                                     |
 |        | nano_node_online_stake_total           | Online Stake Total                                 |
 |        | nano_node_peers_stake_total            | Peered Stake Total                                 |
+|        | nan_node_trended_stake_total           | Trended Stake Total                                |
 |        | nano_node_peer_count                   | raw peer count                                     |
 |        | nano_uptime                            | node uptime(sec)                                   |
 |        | nano_version                           | version string                                     |

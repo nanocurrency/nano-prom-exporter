@@ -170,6 +170,10 @@ class nanoProm:
             'nano_node_peers_stake_total',
             'Peers Stake Total',
             registry=registry)
+        self.TrendedStake = Gauge(
+            'nano_node_trended_stake_total',
+            'Trended Stake Total',
+            registry=registry)
         self.telemetry_raw_blocks = Gauge(
             'telemetry_raw_blocks',
             'Raw Telemetry block count by endpoint',
