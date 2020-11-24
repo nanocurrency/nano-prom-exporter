@@ -19,11 +19,11 @@ class Config(object):
         try:
             config = configparser.ConfigParser()
             config.read(config_path)
-            self.rpc_ip = config.get('DEFAULT', 'rpc_ip', fallback=self.rpc_ip)
+            self.rpc_ip = config.get('DEFAULT', 'rpcIp', fallback=self.rpc_ip)
             self.rpc_port = config.get(
-                'DEFAULT', 'rpc_port', fallback=self.rpc_port)
+                'DEFAULT', 'rpcPort', fallback=self.rpc_port)
             self.node_data_path = config.get(
-                'DEFAULT', 'node_data_path', fallback=self.node_data_path)
+                'DEFAULT', 'nodeDataPath', fallback=self.node_data_path)
             self.hostname = config.get(
                 'DEFAULT', 'hostname', fallback=self.hostname)
             self.interval = config.get(

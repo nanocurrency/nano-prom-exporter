@@ -27,9 +27,9 @@
 ### Sample config.ini
 ```ini
 [DEFAULT]
-rpc_ip = localhost ; ip for rpc
-rpc_port = 7076 ; port for rpc
-node_data_path = ~/Nano/ ; path to Nano Directory
+rpcIP = localhost ; ip for rpc
+rpcPort = 7076 ; port for rpc
+nodeDataPath = ~/Nano/ ; path to Nano Directory
 hostname = testing ; hostname will default to socket.gethostname if not configured
 interval = 10 ; default 10 seconds
 
