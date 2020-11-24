@@ -266,6 +266,7 @@ class nanoProm:
                     psutil.disk_usage(self.config.node_data_path).used)
             self.OnlineStake.set(stats.OnlineStake)
             self.PeersStake.set(stats.PeersStake)
+            self.TrendedStake.set(stats.TrendedStake)
             for a in stats.BlockCount:
                 self.BlockCount.labels(a).set(stats.BlockCount[a])
             self.PeersCount.set(len(stats.Peers['peers']))
