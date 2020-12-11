@@ -162,6 +162,10 @@ class nanoProm:
             'nano_node_volume_total', 'data volume stats', registry=registry)
         self.Frontiers = Gauge('nano_node_frontier_count',
                                'local node frontier count', registry=registry)
+        self.QuorumDelta = Gauge(
+            'nano_node_quorum_delta',
+            'Quorum Delta from Confirmation Quorum RPC',
+            registry=registry)
         self.OnlineStake = Gauge(
             'nano_node_online_stake_total',
             'Online Stake Total',
@@ -264,6 +268,7 @@ class nanoProm:
                     psutil.disk_usage(self.config.node_data_path).total)
                 self.databaseVolumeUsed.set(
                     psutil.disk_usage(self.config.node_data_path).used)
+            self.QuorumDelta.set(stats.QuorumDelta)
             self.OnlineStake.set(stats.OnlineStake)
             self.PeersStake.set(stats.PeersStake)
             self.TrendedStake.set(stats.TrendedStake)

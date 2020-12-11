@@ -53,6 +53,7 @@ password = testing ; password for basic auth
 |        | nano_block_count{type}                 | Block Count Statistics                             |
 |        | nano_confirmation_history{count}       | Block Confirmation Average{count sample size}      |
 |        | nano_node_frontier_count               | Frontier Count                                     |
+|        | nano_node_quorum_delta                 | Quorum Delta From Confirmation Quorum
 |        | nano_node_online_stake_total           | Online Stake Total                                 |
 |        | nano_node_peers_stake_total            | Peered Stake Total                                 |
 |        | nan_node_trended_stake_total           | Trended Stake Total                                |

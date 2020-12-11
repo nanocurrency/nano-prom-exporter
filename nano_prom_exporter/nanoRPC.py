@@ -44,6 +44,7 @@ class nanoStats:
         self.Version = collection['version']
         self.Frontiers = collection['frontier_count']['count']
         self.OnlineStake = collection['confirmation_quorum']['online_stake_total']
+        self.QuorumDelta = collection['confirmation_quorum']['quorum_delta']
         self.PeersStake = collection['confirmation_quorum']['peers_stake_total']
         self.TrendedStake = collection['confirmation_quorum']['trended_stake_total']
         self.TelemetryRaw = collection['telemetry_raw']['metrics']
